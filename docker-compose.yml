@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Jiuge 主服务
+  jiuge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jiuge
+    ports:
+      - "8000:8000"
+    environment:
+      # 平台配置
+      - NETEASE_COOKIE=${NETEASE_COOKIE:-}
+      - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID:-}
+      - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET:-}
+      - QQMUSIC_APP_ID=${QQMUSIC_APP_ID:-}
+      - QQMUSIC_APP_SECRET=${QQMUSIC_APP_SECRET:-}
+      - APPLE_DEVELOPER_TOKEN=${APPLE_DEVELOPER_TOKEN:-}
+      # 缓存配置
+      - REDIS_URL=redis://redis:6379/0
+      # API 配置
+      - JIUGE_API_HOST=0.0.0.0
+      - JIUGE_API_PORT=8000
+      - JIUGE_DEBUG=false
+    volumes:
+      - jiuge-data:/app/data
+      - jiuge-music:/app/music
+      - ./config:/app/config:ro
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - jiuge-network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: jiuge-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - jiuge-network
+
+  # Web UI (可选)
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: jiuge-web
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - jiuge
+    restart: unless-stopped
+    networks:
+      - jiuge-network
+    profiles:
+      - web
+
+volumes:
+  jiuge-data:
+    driver: local
+  jiuge-music:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  jiuge-network:
+    driver: bridge

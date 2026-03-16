@@ -1,0 +1,174 @@
+/* Jiuge Web 样式入口 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局样式 */
+:root {
+  --primary-color: #0ea5e9;
+  --bg-color: #0a0a12;
+  --surface-color: #1e1e2e;
+  --text-color: #e4e4e7;
+  --text-muted: #a1a1aa;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* 按钮基础样式 */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500/50;
+}
+
+.btn-primary {
+  @apply bg-primary-500 text-white hover:bg-primary-600;
+}
+
+.btn-secondary {
+  @apply bg-dark-100 text-gray-300 hover:bg-dark-200;
+}
+
+.btn-ghost {
+  @apply bg-transparent text-gray-400 hover:text-white hover:bg-white/5;
+}
+
+/* 输入框样式 */
+.input {
+  @apply w-full px-4 py-2 bg-dark-200 border border-gray-700 rounded-lg;
+  @apply text-white placeholder-gray-500;
+  @apply focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500;
+}
+
+/* 卡片样式 */
+.card {
+  @apply bg-dark-100 rounded-xl p-4;
+}
+
+/* 歌曲列表项 */
+.track-item {
+  @apply flex items-center gap-4 p-3 rounded-lg;
+  @apply hover:bg-white/5 cursor-pointer transition-colors;
+}
+
+.track-item:hover .track-actions {
+  @apply opacity-100;
+}
+
+.track-actions {
+  @apply opacity-0 transition-opacity;
+}
+
+/* 播放进度条 */
+.progress-bar {
+  @apply relative h-1 bg-gray-700 rounded-full cursor-pointer;
+}
+
+.progress-bar:hover {
+  @apply h-2;
+}
+
+.progress-fill {
+  @apply absolute left-0 top-0 h-full bg-primary-500 rounded-full;
+}
+
+/* 音量控制 */
+.volume-slider {
+  @apply w-24 h-1 bg-gray-700 rounded-full;
+}
+
+/* 播放列表 */
+.playlist-card {
+  @apply relative group overflow-hidden rounded-xl;
+  @apply bg-gradient-to-br from-dark-100 to-dark-200;
+}
+
+.playlist-card:hover {
+  @apply transform scale-[1.02];
+}
+
+.playlist-card:hover .playlist-overlay {
+  @apply opacity-100;
+}
+
+.playlist-overlay {
+  @apply absolute inset-0 bg-black/50 opacity-0 transition-opacity;
+  @apply flex items-center justify-center;
+}
