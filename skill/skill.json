@@ -1,8 +1,11 @@
 {
   "name": "jiuge",
-  "version": "0.1.0",
-  "description": "OpenClaw skill for Netease Cloud Music control",
+  "version": "1.0.0",
+  "description": "OpenClaw skill for multi-platform music control",
   "author": "DaimaRuge",
+  "license": "MIT",
+  "repository": "https://github.com/DaimaRuge/Jiuge",
+  "keywords": ["music", "openclaw", "spotify", "netease", "qqmusic", "agent"],
   "triggers": [
     "听.*的歌",
     "搜索.*歌",
@@ -13,31 +16,40 @@
     "上一首",
     "停止",
     "状态",
-    "歌单"
+    "歌单",
+    "收藏",
+    "推荐",
+    "统计",
+    "帮助"
   ],
   "commands": {
     "search": {
-      "pattern": "^(听|搜索)\\s*(.+)",
-      "description": "搜索歌曲"
+      "pattern": "^(?:听|搜索|找|播放)(.+)(?:的歌|歌曲|音乐)?$",
+      "description": "搜索歌曲",
+歌手"
     },
     "play": {
-      "pattern": "^播放\\s*(\\d+)",
-      "description": "播放指定序号的歌曲"
+      "pattern": "^(?:播放|play)\\s*第?\\s*(\\d+)\\s*首?$",
+      "description": "播放指定序号的歌曲",
+    },
+    "play_by_index": {
+      "pattern": "^播放第\\s*(\\d+)\\s*首$",
+      "description": "播放指定序号的歌曲（简洁版)"
     },
     "pause": {
       "pattern": "^暂停$",
       "description": "暂停播放"
     },
     "resume": {
-      "pattern": "^继续$",
+      "pattern": "^(?:继续|恢复)$",
       "description": "继续播放"
     },
     "next": {
-      "pattern": "^下一首$",
+      "pattern": "^(?:下一首|下一曲|跳过|切歌)$",
       "description": "播放下一首"
     },
     "prev": {
-      "pattern": "^上一首$",
+      "pattern": "^(?:上一首|上一曲|返回)$",
       "description": "播放上一首"
     },
     "stop": {
@@ -45,16 +57,118 @@
       "description": "停止播放"
     },
     "status": {
-      "pattern": "^状态$",
+      "pattern": "^(?:状态|播放状态|当前播放)$",
       "description": "查看播放状态"
     },
     "playlist": {
-      "pattern": "^歌单$",
-      "description": "查看当前歌单"
+      "pattern": "^(?:歌单列表|我的歌单|歌单)$",
+      "description": "查看歌单列表"
+    },
+    "favorite": {
+      "pattern": "^(?:收藏|加入收藏|喜欢|爱心|❤️?)$",
+      "description": "收藏当前歌曲"
+    },
+    "recommend": {
+      "pattern": "^(?:推荐|每日推荐|给我推荐|推荐歌曲)$",
+      "description": "获取推荐歌曲"
+    },
+    "stats": {
+      "pattern": "^(?:统计|听歌统计|播放记录|听歌记录)$",
+      "description": "查看听歌统计"
+    },
+    "help": {
+      "pattern": "^(?:帮助|help|\\?)$",
+      "description": "显示帮助信息"
+    },
+    "volume": {
+      "pattern": "^(?:音量|声音)\\s*(\\d+)%?$",
+      "description": "设置音量"
+    },
+    "shuffle": {
+      "pattern": "^(?:随机播放|乱序)$",
+      "description": "随机播放模式"
+    },
+    "loop": {
+      "pattern": "^(?:循环|单曲循环|列表循环)$",
+      "description": "循环播放模式"
+    }
+  },
+  "platforms": {
+    "netease": {
+      "name": "网易云音乐",
+      "enabled": true,
+      "config_key": "netease",
+      "features": ["search", "play", "playlist", "favorite", "recommend", "upload"]
+    },
+    "spotify": {
+      "name": "Spotify",
+      "enabled": false,
+      "config_key": "spotify",
+      "features": ["search", "play", "playlist", "favorite", "recommend"]
+    },
+    "qqmusic": {
+      "name": "QQ 音乐",
+      "enabled": false,
+      "config_key": "qqmusic",
+      "features": ["search", "play", "playlist", "favorite", "recommend", "upload"]
     }
   },
   "requirements": [
+    "python >=3.11",
     "NeteaseCloudMusicApi>=0.1.0",
-    "ffpyplayer>=4.3.0"
-  ]
+    "spotipy>=2.23.0",
+    "aiohttp>=3.8.0",
+    "ffpyplayer>=4.3.0",
+    "pyyaml>=6.0",
+    "colorlog>=6.7.0"
+  ],
+  "config_schema": {
+    "type": "object",
+    "properties": {
+      "platforms": {
+        "type": "object",
+        "properties": {
+          "netease": {
+            "type": "object",
+            "properties": {
+              "enabled": {"type": "boolean", "default": true},
+              "cookie": {"type": "string"}
+            }
+          },
+          "spotify": {
+            "type": "object",
+            "properties": {
+              "enabled": {"type": "boolean", "default": false},
+              "client_id": {"type": "string"},
+              "client_secret": {"type": "string"},
+              "redirect_uri": {"type": "string", "default": "http://localhost:8888/callback"}
+            }
+          },
+          "qqmusic": {
+            "type": "object",
+            "properties": {
+              "enabled": {"type": "boolean", "default": false},
+              "app_id": {"type": "string"},
+              "app_secret": {"type": "string"},
+              "cookie": {"type": "string"}
+            }
+          }
+        }
+      },
+      "memory": {
+        "type": "object",
+        "properties": {
+          "db_path": {"type": "string", "default": "~/.jiuge/memory.db"},
+          "auto_backup": {"type": "boolean", "default": true}
+        }
+      },
+      "player": {
+        "type": "object",
+        "properties": {
+          "backend": {"type": "string", "default": "ffpyplayer"},
+          "volume": {"type": "integer", "default": 80}
+        }
+      }
+    }
+  }
 }

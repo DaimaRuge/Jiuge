@@ -1,2 +1,17 @@
+# Jiuge 音乐智能体依赖
+
+# 核心依赖
 NeteaseCloudMusicApi>=0.1.0
+spotipy>=2.23.0
+
+# 音频播放
 ffpyplayer>=4.3.0
+
+# 异步支持
+aiohttp>=3.8.0
+
+# 配置管理
+pyyaml>=6.0
+
+# 日志
+colorlog>=6.7.0

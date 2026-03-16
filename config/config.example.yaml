@@ -1,0 +1,41 @@
+# Jiuge 配置文件示例
+
+# 音乐平台配置
+platforms:
+  netease:
+    enabled: true
+    cookie: ${NETEASE_COOKIE}  # 从环境变量读取
+  
+  spotify:
+    enabled: false
+    client_id: ${SPOTIFY_CLIENT_ID}
+    client_secret: ${SPOTIFY_CLIENT_SECRET}
+    redirect_uri: http://localhost:8888/callback
+  
+  qqmusic:
+    enabled: false
+    app_id: ${QQMUSIC_APP_ID}
+    app_secret: ${QQMUSIC_APP_SECRET}
+  
+  apple:
+    enabled: false
+    developer_token: ${APPLE_DEVELOPER_TOKEN}
+
+# 播放器配置
+player:
+  backend: ffpyplayer  # ffpyplayer / mpv
+  volume: 80
+
+# 记忆存储配置
+memory:
+  db_path: ~/.jiuge/memory.db
+  auto_backup: true
+  backup_interval: 86400
+
+# Agent 配置
+agent:
+  default_platform: netease
+  search_priority:
+    - netease
+    - spotify
+  language: zh-CN
