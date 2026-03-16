@@ -1,0 +1,60 @@
+{
+  "name": "jiuge",
+  "version": "0.1.0",
+  "description": "OpenClaw skill for Netease Cloud Music control",
+  "author": "DaimaRuge",
+  "triggers": [
+    "听.*的歌",
+    "搜索.*歌",
+    "播放.*",
+    "暂停",
+    "继续",
+    "下一首",
+    "上一首",
+    "停止",
+    "状态",
+    "歌单"
+  ],
+  "commands": {
+    "search": {
+      "pattern": "^(听|搜索)\\s*(.+)",
+      "description": "搜索歌曲"
+    },
+    "play": {
+      "pattern": "^播放\\s*(\\d+)",
+      "description": "播放指定序号的歌曲"
+    },
+    "pause": {
+      "pattern": "^暂停$",
+      "description": "暂停播放"
+    },
+    "resume": {
+      "pattern": "^继续$",
+      "description": "继续播放"
+    },
+    "next": {
+      "pattern": "^下一首$",
+      "description": "播放下一首"
+    },
+    "prev": {
+      "pattern": "^上一首$",
+      "description": "播放上一首"
+    },
+    "stop": {
+      "pattern": "^停止$",
+      "description": "停止播放"
+    },
+    "status": {
+      "pattern": "^状态$",
+      "description": "查看播放状态"
+    },
+    "playlist": {
+      "pattern": "^歌单$",
+      "description": "查看当前歌单"
+    }
+  },
+  "requirements": [
+    "NeteaseCloudMusicApi>=0.1.0",
+    "ffpyplayer>=4.3.0"
+  ]
+}
